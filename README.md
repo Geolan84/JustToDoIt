@@ -1,5 +1,27 @@
 # to_do
 
+Домашнее задание №2: «Alan Turing»
+
+Ссылка на .apk: https://drive.google.com/file/d/16vsbA8_nYI9AYKSB6-ZNjaGukifr_Czt/view?usp=sharing
+
+**Изменения:**
+
+* В проект был добавлен bloc для управления состоянием (обычно писал на provider или elementary, а тут решил изучить новую либу/архитектуру и потерял очень много времени из-за этого, грустно);
+* Поправил баги в UI, декомпозировал виджеты;
+* Добавил локализацию, теперь есть две локали: русская и английская;
+* Есть получение всех заметок и отправка созданной.
+* Из любопытного: добавил fvm и конфиг для запуска для него;
+* Токен спрятал в файлик `secrets.json`, закинул его в .gitignore. Чтобы приложение можно было запустить и/или сбилдить, необходимо использовать команду `flutter build apk --dart-define-from-file=secrets.json`. С run то же самое. В самом файлике токен лежит так:
+
+<img src="https://github.com/Geolan84/JustToDoIt/assets/71218029/57198173-1789-4b58-9bfd-e44654ca5361" height="400" />
+
+<img src="https://github.com/Geolan84/JustToDoIt/assets/71218029/995cd5b5-1195-44c2-a7c3-c71b7504524e" height="400" />
+
+
+
+----
+
+
 Домашнее задание №1: «Ada Lovelace»
 
 Ссылка на .apk: https://drive.google.com/file/d/1QHPVSU6VmwAHoR0v9waKcrC6mnl5nxcj/view?usp=sharing 
