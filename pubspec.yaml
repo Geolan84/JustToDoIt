@@ -22,6 +22,7 @@ dependencies:
   uuid: ^4.4.0
 
 dev_dependencies:
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
   surf_lint_rules: ^3.1.0
