@@ -1,0 +1,33 @@
+{
+  "@@locale": "ru",
+  "@segmentToDoList": {
+    "---------": "---------",
+    "description": "Titles for todo list screen"
+  },
+  "myTasks": "Мои дела",
+  "newTask": "Новое",
+  "tasksCompleted": "Выполнено - {taskNumber}",
+  "@tasksCompleted": {
+    "placeholders": {
+      "taskNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "@segmentSingleToDo": {
+    "---------": "---------",
+    "description": "Titles for single todo screen"
+  },
+  "deleteButtonTitle": "Удалить",
+  "titleFieldHint": "Что надо сделать...",
+  "priorityHeader": "Важность",
+  "deadlineHeader": "Сделать до",
+  "saveButtonTitle": "Сохранить",
+  "@segmentTaskPriority": {
+    "---------": "---------",
+    "description": "Task priority values"
+  },
+  "priorityNone": "Нет",
+  "priorityLow": "Низкий",
+  "priorityHigh": "!! Высокий"
+}
