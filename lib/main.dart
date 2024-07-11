@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:to_do/features/todo_list/presentation/todo_list_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:to_do/features/todo_list/presentation/screen/todo_list_screen.dart';
+import 'package:to_do/util/service_locator.dart';
 import 'package:to_do/util/themes.dart';
 
 void main() async {
@@ -9,17 +11,24 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(const MyApp());
+  initServiceLocator();
+  runApp(
+    const ToDoApp(),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// App Widget.
+class ToDoApp extends StatelessWidget {
+  /// Constructor of [ToDoApp].
+  const ToDoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppThemes.lightTheme,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const ToDoListScreen(),
     );
   }

@@ -1,0 +1,38 @@
+{
+  "@@locale": "en",
+  "@segmentCommonStrings": {
+    "---------": "---------",
+    "description": "Shared titles for whole app"
+  },
+  "tryAgain": "Try again",
+  "@segmentToDoList": {
+    "---------": "---------",
+    "description": "Titles for todo list screen"
+  },
+  "myTasks": "My tasks",
+  "newTask": "New task",
+  "tasksCompleted": "Completed - {taskNumber}",
+  "@tasksCompleted": {
+    "placeholders": {
+      "taskNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "@segmentSingleToDo": {
+    "---------": "---------",
+    "description": "Titles for single todo screen"
+  },
+  "deleteButtonTitle": "Delete",
+  "titleFieldHint": "What need to do...",
+  "priorityHeader": "Importance",
+  "deadlineHeader": "Complete before",
+  "saveButtonTitle": "Save",
+  "@segmentTaskImportance": {
+    "---------": "---------",
+    "description": "Task importance values"
+  },
+  "importanceLow": "Low",
+  "importanceBasic": "Basic",
+  "importanceImportant": "!! Important"
+}

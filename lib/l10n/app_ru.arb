@@ -1,0 +1,38 @@
+{
+  "@@locale": "ru",
+  "@segmentCommonStrings": {
+    "---------": "---------",
+    "description": "Shared titles for whole app"
+  },
+  "tryAgain": "Попробовать ещё",
+  "@segmentToDoList": {
+    "---------": "---------",
+    "description": "Titles for todo list screen"
+  },
+  "myTasks": "Мои дела",
+  "newTask": "Новое",
+  "tasksCompleted": "Выполнено - {taskNumber}",
+  "@tasksCompleted": {
+    "placeholders": {
+      "taskNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "@segmentSingleToDo": {
+    "---------": "---------",
+    "description": "Titles for single todo screen"
+  },
+  "deleteButtonTitle": "Удалить",
+  "titleFieldHint": "Что надо сделать...",
+  "priorityHeader": "Важность",
+  "deadlineHeader": "Сделать до",
+  "saveButtonTitle": "Сохранить",
+  "@segmentTaskImportance": {
+    "---------": "---------",
+    "description": "Task importance values"
+  },
+  "importanceLow": "Низкая",
+  "importanceBasic": "Средняя",
+  "importanceImportant": "!! Высокая"
+}
