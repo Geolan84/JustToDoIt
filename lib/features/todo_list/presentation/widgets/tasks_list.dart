@@ -1,46 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do/core/domain/task/task.dart';
-import 'package:to_do/features/create_todo/presentation/single_todo_screen.dart';
+import 'package:to_do/util/extenstions/context_extension.dart';
 
 /// Sliver widget with tasks.
 class TasksList extends StatelessWidget {
   /// List of [Task] to show.
-  final List<Task> tasks;
+  final List<Task>? tasks;
 
   /// Callback to create new task.
-  final VoidCallback? newTaskCallback;
+  final VoidCallback newTaskCallback;
+
+  /// Callback to complete the task.
+  final Function(Task) onTaskCompleted;
+
+  /// Callback to delete the task.
+  final Function(Task) onTaskDeleted;
+
+  /// Callback to open task editing form.
+  final Function(Task) onTaskClicked;
 
   /// Constructor of [TasksList] widget.
   const TasksList({
     required this.tasks,
-    this.newTaskCallback,
+    required this.newTaskCallback,
+    required this.onTaskCompleted,
+    required this.onTaskDeleted,
+    required this.onTaskClicked,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
     return SliverPadding(
       padding: const EdgeInsets.all(10),
       sliver: DecoratedSliver(
         decoration: BoxDecoration(
-          color: theme.colorScheme.secondary,
+          color: context.colorScheme.secondary,
           borderRadius: BorderRadius.circular(15),
         ),
         sliver: SliverMainAxisGroup(
           slivers: [
-            SliverConstrainedCrossAxis(
-              maxExtent: 400,
-              sliver: SliverList.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return _TaskItem(task: tasks[index]);
-                },
+            if (tasks != null)
+              SliverConstrainedCrossAxis(
+                maxExtent: 400,
+                sliver: SliverList.builder(
+                  itemCount: tasks?.length,
+                  itemBuilder: (context, index) {
+                    return _TaskItem(
+                      task: tasks![index],
+                      onTaskCompleted: onTaskCompleted,
+                      onTaskDeleted: onTaskDeleted,
+                      onTaskClicked: onTaskClicked,
+                    );
+                  },
+                ),
               ),
-            ),
             SliverToBoxAdapter(
               child: GestureDetector(
                 onTap: newTaskCallback,
@@ -52,10 +67,10 @@ class TasksList extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        l10n.newTask,
+                        context.l10n.newTask,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: theme.colorScheme.onPrimary,
+                          color: context.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -73,36 +88,44 @@ class TasksList extends StatelessWidget {
 class _TaskItem extends StatelessWidget {
   final Task task;
 
-  const _TaskItem({required this.task});
+  final Function(Task) onTaskCompleted;
+
+  final Function(Task) onTaskDeleted;
+
+  final Function(Task) onTaskClicked;
+
+  const _TaskItem({
+    required this.task,
+    required this.onTaskCompleted,
+    required this.onTaskDeleted,
+    required this.onTaskClicked,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Dismissible(
-      key: Key(task.title),
+      key: Key('${task.id} ${task.isDone}'),
       background: _DismissibleDecoration(
         alignment: Alignment.centerLeft,
-        backgroundColor: theme.colorScheme.onSecondary,
-        foregroundColor: theme.colorScheme.secondary,
+        backgroundColor: context.colorScheme.onSecondary,
+        foregroundColor: context.colorScheme.secondary,
         icon: Icons.check,
       ),
       secondaryBackground: _DismissibleDecoration(
         alignment: Alignment.centerRight,
-        backgroundColor: theme.colorScheme.error,
-        foregroundColor: theme.colorScheme.secondary,
+        backgroundColor: context.colorScheme.error,
+        foregroundColor: context.colorScheme.secondary,
         icon: Icons.delete,
       ),
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
-        } else {}
+          onTaskCompleted(task);
+        } else {
+          onTaskDeleted(task);
+        }
       },
       child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => SingleToDoScreen(task: task),
-          ),
-        ),
+        onTap: () => onTaskClicked(task),
         child: Container(
           color: Colors.transparent,
           padding: const EdgeInsets.only(
@@ -122,22 +145,31 @@ class _TaskItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      task.title,
+                      task.text,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(
+                        fontSize: 16,
+                        decoration:
+                            task.isDone ? TextDecoration.lineThrough : null,
+                      ),
                     ),
-                    if (task.date != null)
+                    if (task.deadline != null)
                       Text(
-                        DateFormat('dd.MM.yyyy').format(task.date!),
-                        style: TextStyle(color: theme.colorScheme.onPrimary),
+                        DateFormat('dd.MM.yyyy').format(
+                            DateTime.fromMicrosecondsSinceEpoch(
+                                task.deadline!)),
+                        style: TextStyle(color: context.colorScheme.onPrimary),
                       )
                   ],
                 ),
               ),
-              if (task.priority == Priority.high)
-                const Icon(Icons.error_outline, color: Colors.red)
-              else if (task.priority == Priority.low)
+              if (task.importance == Importance.important)
+                Icon(
+                  Icons.error_outline,
+                  color: context.colorScheme.error,
+                )
+              else if (task.importance == Importance.low)
                 const Icon(Icons.arrow_downward)
             ],
           ),

@@ -2,15 +2,22 @@ import 'package:logger/logger.dart';
 
 /// Logger for app.
 class AppLogger {
-  final _logger = Logger();
+  static final _logger = Logger();
 
   /// Creates log with completed task.
-  void logCompletedTask(String taskDetails) {
+  static void logCompletedTask(String taskDetails) {
     _logger.d('Task <$taskDetails> is completed.');
   }
 
   /// Creates log with deleted task.
-  void logDeletedTask(String taskDetails) {
+  static void logDeletedTask(String taskDetails) {
     _logger.d('Task <$taskDetails> is deleted.');
+  }
+
+  /// Creates log with error message.
+  static void logError(String errorMessage, String? stackTrace) {
+    _logger.e(
+      'Error: $errorMessage\nStackTrace:${stackTrace ?? '-'}',
+    );
   }
 }

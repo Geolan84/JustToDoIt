@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:to_do/util/extenstions/context_extension.dart';
 
 /// Sliver persistent header for all tasks screen.
 class ToDoHeader extends StatelessWidget {
@@ -7,30 +7,29 @@ class ToDoHeader extends StatelessWidget {
   final VoidCallback onVisibilityChanged;
 
   /// Count of completed tasks.
-  final int completedCount;
+  final int? completedCount;
 
-  /// Icon for filter button.
-  final IconData icon;
+  /// State of 'visibility' icon.
+  final bool? completedShow;
 
   /// Constructor of [ToDoHeader].
   const ToDoHeader({
     required this.onVisibilityChanged,
     required this.completedCount,
-    required this.icon,
+    required this.completedShow,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return SliverPersistentHeader(
       pinned: true,
       floating: true,
       delegate: _HeaderDelegate(
-        l10n.myTasks,
-        completedCount,
-        onVisibilityChanged,
-        icon,
+        title: context.l10n.myTasks,
+        completedCount: completedCount,
+        completedShow: completedShow,
+        onVisibilityChanged: onVisibilityChanged,
       ),
     );
   }
@@ -39,18 +38,18 @@ class ToDoHeader extends StatelessWidget {
 class _HeaderDelegate extends SliverPersistentHeaderDelegate {
   final String title;
 
-  final int completedCount;
+  final int? completedCount;
 
-  final IconData icon;
+  final bool? completedShow;
 
   final VoidCallback onVisibilityChanged;
 
-  const _HeaderDelegate(
-    this.title,
-    this.completedCount,
-    this.onVisibilityChanged,
-    this.icon,
-  );
+  const _HeaderDelegate({
+    required this.title,
+    required this.completedCount,
+    required this.completedShow,
+    required this.onVisibilityChanged,
+  });
 
   @override
   Widget build(
@@ -58,24 +57,26 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final viewButton = IconButton(
-      onPressed: onVisibilityChanged,
-      icon: Icon(
-        icon,
-        color: colorScheme.primary,
-      ),
-    );
-    final closedCount = Text(
-      AppLocalizations.of(context)!.tasksCompleted(completedCount),
-      style: TextStyle(
-        color: colorScheme.onPrimary,
-        fontSize: 16,
-      ),
-      overflow: TextOverflow.ellipsis,
-    );
+    final viewButton = completedShow == null
+        ? const SizedBox.shrink()
+        : IconButton(
+            onPressed: onVisibilityChanged,
+            icon: Icon(
+              completedShow! ? Icons.visibility_off : Icons.visibility,
+              color: context.colorScheme.primary,
+            ),
+          );
+    final closedCount = completedCount == null
+        ? const SizedBox.shrink()
+        : Text(
+            context.l10n.tasksCompleted(completedCount!),
+            style: TextStyle(
+              color: context.colorScheme.onPrimary,
+              fontSize: 16,
+            ),
+            overflow: TextOverflow.ellipsis,
+          );
     const limit = 100;
-    final theme = Theme.of(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -83,7 +84,7 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
         final closedRow = Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (isExpanded) closedCount,
+            if (isExpanded && completedShow != null) closedCount,
             viewButton,
           ],
         );
@@ -97,7 +98,7 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
         );
 
         return ColoredBox(
-          color: theme.scaffoldBackgroundColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
             padding: EdgeInsets.only(
               left: isExpanded ? 55 : 20,

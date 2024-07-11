@@ -1,5 +1,10 @@
 {
   "@@locale": "ru",
+  "@segmentCommonStrings": {
+    "---------": "---------",
+    "description": "Shared titles for whole app"
+  },
+  "tryAgain": "Попробовать ещё",
   "@segmentToDoList": {
     "---------": "---------",
     "description": "Titles for todo list screen"
@@ -23,11 +28,11 @@
   "priorityHeader": "Важность",
   "deadlineHeader": "Сделать до",
   "saveButtonTitle": "Сохранить",
-  "@segmentTaskPriority": {
+  "@segmentTaskImportance": {
     "---------": "---------",
-    "description": "Task priority values"
+    "description": "Task importance values"
   },
-  "priorityNone": "Нет",
-  "priorityLow": "Низкий",
-  "priorityHigh": "!! Высокий"
+  "importanceLow": "Низкая",
+  "importanceBasic": "Средняя",
+  "importanceImportant": "!! Высокая"
 }

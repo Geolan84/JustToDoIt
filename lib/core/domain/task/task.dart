@@ -1,137 +1,108 @@
-import 'dart:convert';
-import 'package:equatable/equatable.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'task.g.dart';
 
 /// Task model.
-class Task extends Equatable {
+@immutable
+@JsonSerializable()
+class Task {
   /// UUID.
   final String id;
 
-  /// Title of task.
-  final String title;
+  /// Text of task.
+  final String text;
 
   /// Priority of task.
-  final Priority priority;
+  final Importance importance;
 
   /// Deadline of task.
-  final DateTime? date;
+  final int? deadline;
 
   /// Task status.
+  @JsonKey(name: 'done')
   final bool isDone;
 
   /// Time of creation.
+  @JsonKey(name: 'created_at')
   final int createdAt;
 
   /// Time of last change.
+  @JsonKey(name: 'changed_at')
   final int changedAt;
 
   /// Device id of last changer.
+  @JsonKey(name: 'last_updated_by')
   final String deviceId;
 
   /// Constructor for Task model.
   const Task({
     required this.id,
-    required this.title,
-    required this.priority,
+    required this.text,
+    required this.importance,
     required this.createdAt,
     required this.changedAt,
     required this.deviceId,
     this.isDone = false,
-    this.date,
+    this.deadline,
   });
 
-  /// Creates a copy of task with new arguments.
+  /// Factory to create the task from json representation.
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
+
+  /// Converts task to json representation.
+  Map<String, dynamic> toJson() => _$TaskToJson(this);
+
   Task copyWith({
     String? id,
-    String? title,
-    Priority? priority,
-    DateTime? date,
+    String? text,
+    Importance? importance,
+    int? deadline,
+    bool? isDone,
     int? createdAt,
     int? changedAt,
-    bool? isDone,
     String? deviceId,
+    bool resetDeadline = false,
   }) {
     return Task(
       id: id ?? this.id,
-      title: title ?? this.title,
-      priority: priority ?? this.priority,
-      date: date ?? this.date,
+      text: text ?? this.text,
+      importance: importance ?? this.importance,
+      deadline: resetDeadline ? null : deadline ?? this.deadline,
       isDone: isDone ?? this.isDone,
       createdAt: createdAt ?? this.createdAt,
       changedAt: changedAt ?? this.changedAt,
       deviceId: deviceId ?? this.deviceId,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        title,
-        priority,
-        date,
-        isDone,
-      ];
-
-  /// Converts task to map.
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'text': title,
-      'importance': priority.toString(),
-      'deadline': date == null ? date : date!.millisecondsSinceEpoch ~/ 1000,
-      'done': isDone,
-      'created_at': createdAt,
-      'changed_at': changedAt,
-      'last_updated_by': deviceId
-    };
-  }
-
-  /// Restore task from map.
-  factory Task.fromMap(Map<String, dynamic> map) {
-    return Task(
-      id: map['id'] as String,
-      title: map['text'] as String,
-      priority: Priority.fromName(map['importance'] as String),
-      date: map['deadline'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['deadline'] as int)
-          : null,
-      isDone: map['done'] as bool,
-      createdAt: map['created_at'] as int,
-      changedAt: map['changed_at'] as int,
-      deviceId: map['last_updated_by'] as String,
-    );
-  }
-
-  /// Serialize task to json.
-  String toJson() => json.encode(toMap());
-
-  /// Deserialize task from json.
-  factory Task.fromJson(source) => Task.fromMap(source as Map<String, dynamic>);
 }
 
 /// Priority levels enum.
-enum Priority {
-  /// No priority.
-  no,
-
+enum Importance {
   /// Low priority.
   low,
 
+  /// Basic priority.
+  basic,
+
   /// High priority.
-  high;
+  important;
 
   @override
   String toString() {
     return switch (this) {
-      Priority.no => 'low',
-      Priority.low => 'basic',
+      Importance.low => 'low',
+      Importance.basic => 'basic',
       _ => 'important',
     };
   }
 
-  factory Priority.fromName(String name) {
+  factory Importance.fromName(String name) {
     return switch (name) {
-      'low' => Priority.no,
-      'basic' => Priority.low,
-      _ => Priority.high,
+      'low' => Importance.low,
+      'basic' => Importance.basic,
+      _ => Importance.important,
     };
   }
 }
